@@ -218,3 +218,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Python generated files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+module2_ml/venv/
+
+# Saved model files
+module2_ml/saved_models/
