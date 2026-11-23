@@ -214,5 +214,77 @@
         "signal_type": "Acoustic",
         "anomaly_score": 0.145,
         "status": "NORMAL"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "Acoustic",
+        "anomaly_score": 0.832,
+        "status": "CRITICAL"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "Acoustic",
+        "anomaly_score": 0.602,
+        "status": "WARNING"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "RF",
+        "anomaly_score": 0.612,
+        "status": "WARNING"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "Acoustic",
+        "anomaly_score": 0.615,
+        "status": "WARNING"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "RF",
+        "anomaly_score": 0.595,
+        "status": "WARNING"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "Acoustic",
+        "anomaly_score": 0.78,
+        "status": "WARNING"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "Acoustic",
+        "anomaly_score": 0.746,
+        "status": "WARNING"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "RF",
+        "anomaly_score": 0.911,
+        "status": "CRITICAL"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "Acoustic",
+        "anomaly_score": 0.608,
+        "status": "WARNING"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "Acoustic",
+        "anomaly_score": 0.048,
+        "status": "NORMAL"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "Acoustic",
+        "anomaly_score": 0.251,
+        "status": "NORMAL"
+    },
+    {
+        "timestamp": "2026-11-23T06:16:06+05:30",
+        "signal_type": "RF",
+        "anomaly_score": 0.011,
+        "status": "NORMAL"
     }
 ]
