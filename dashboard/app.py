@@ -1,113 +1,88 @@
 
 import json
+import random
 
-import streamlit as st
-import pandas as pd
 import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+import streamlit as st
 
 from alerts import (
     create_alert,
     generate_alert_summary,
     load_alerts,
-    append_alerts
-)
-
-from visualization import (
-    generate_signal,
-    create_signal_chart
+    append_alerts,
 )
 
 
-# ---------------- PAGE CONFIGURATION ----------------
+# --------------------------------------------------
+# PAGE CONFIGURATION
+# --------------------------------------------------
 
 st.set_page_config(
-    page_title="AetherHound | Security Monitor",
+    page_title="AetherHound | Monitoring Dashboard",
     page_icon="🛡️",
-    layout="wide"
+    layout="wide",
 )
 
 
-# ---------------- CUSTOM STYLING ----------------
+# --------------------------------------------------
+# CUSTOM CSS
+# --------------------------------------------------
 
-st.markdown("""
-<style>
-.stApp {
-    background-color: #101820;
-    color: #F2F5F7;
-}
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-color: #0b1120;
+        color: #e2e8f0;
+    }
 
-[data-testid="stMetric"] {
-    background-color: #1B2935;
-    padding: 18px;
-    border-radius: 12px;
-    border: 1px solid #34495E;
-}
+    [data-testid="stSidebar"] {
+        background-color: #111827;
+    }
 
-h1, h2, h3 {
-    color: #E8F1F5;
-}
-</style>
-""", unsafe_allow_html=True)
+    div[data-testid="stMetric"] {
+        background-color: #172033;
+        border: 1px solid #263449;
+        padding: 18px;
+        border-radius: 12px;
+    }
 
+    h1, h2, h3 {
+        color: #38bdf8;
+    }
 
-# ---------------- HEADER ----------------
-
-st.title("🛡️ AETHERHOUND")
-
-st.subheader(
-    "Air-Gapped RF & Acoustic Covert Channel Monitoring System"
-)
-
-st.caption(
-    "Software prototype | Synthetic signal monitoring | "
-    "Machine-learning integration under development"
-)
-
-st.divider()
-
-
-# ---------------- SIDEBAR ----------------
-
-st.sidebar.title("Control Panel")
-
-st.sidebar.info(
-    "This prototype uses simulated signals and "
-    "illustrative anomaly scores."
-)
-
-signal_mode = st.sidebar.selectbox(
-    "Select Signal Type",
-    ["Both", "RF", "Acoustic"]
-)
-
-generate_new = st.sidebar.button(
-    "Generate New Simulation",
-    use_container_width=True
+    .status-note {
+        background-color: #172033;
+        padding: 12px;
+        border-radius: 10px;
+        border-left: 4px solid #38bdf8;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 
-# ---------------- SIMULATION FUNCTION ----------------
+# --------------------------------------------------
+# SIMULATION FUNCTIONS
+# --------------------------------------------------
 
 def generate_simulated_events(number_of_events=12):
-    """Generate illustrative RF and acoustic events."""
-
-    rng = np.random.default_rng()
+    """Generate demo events using synthetic scores."""
 
     events = []
 
     for _ in range(number_of_events):
+        signal_type = random.choice(["RF", "Acoustic"])
 
-        signal_type = str(
-            rng.choice(["RF", "Acoustic"])
-        )
-
-        score = float(
-            rng.uniform(0.05, 0.98)
-        )
+        # Synthetic anomaly score between 0 and 1
+        score = random.random()
 
         event = create_alert(
-            signal_type,
-            score
+            signal_type=signal_type,
+            score=score,
         )
 
         events.append(event)
@@ -115,278 +90,328 @@ def generate_simulated_events(number_of_events=12):
     return events
 
 
-# ---------------- INITIAL EVENT CREATION ----------------
+def generate_signal(signal_type):
+    """Generate a synthetic RF or acoustic waveform."""
 
-if not st.session_state.get("initial_batch_created", False):
+    time_values = np.linspace(0, 1, 500)
 
-    saved_events = load_alerts()
+    if signal_type == "RF":
+        signal_values = (
+            np.sin(2 * np.pi * 8 * time_values)
+            + 0.35 * np.sin(2 * np.pi * 20 * time_values)
+            + np.random.normal(0, 0.15, 500)
+        )
+    else:
+        signal_values = (
+            np.sin(2 * np.pi * 4 * time_values)
+            + 0.25 * np.sin(2 * np.pi * 12 * time_values)
+            + np.random.normal(0, 0.12, 500)
+        )
 
-    # Create demonstration data only if no history exists
-    if not saved_events:
-
-        initial_events = generate_simulated_events()
-
-        append_alerts(initial_events)
-
-    st.session_state.initial_batch_created = True
+    return time_values, signal_values
 
 
-# ---------------- GENERATE NEW EVENTS ----------------
+def create_signal_chart(signal_type):
+    """Create a Plotly chart for the selected signal."""
 
-if generate_new:
+    time_values, signal_values = generate_signal(signal_type)
 
-    new_events = generate_simulated_events()
+    figure = go.Figure()
 
-    append_alerts(new_events)
-
-    st.sidebar.success(
-        f"{len(new_events)} new simulated events saved."
+    figure.add_trace(
+        go.Scatter(
+            x=time_values,
+            y=signal_values,
+            mode="lines",
+            name=f"{signal_type} Signal",
+        )
     )
 
+    figure.update_layout(
+        title=f"Simulated {signal_type} Signal",
+        xaxis_title="Time",
+        yaxis_title="Amplitude",
+        template="plotly_dark",
+        height=350,
+        margin=dict(l=20, r=20, t=50, b=20),
+    )
 
-# ---------------- LOAD PERSISTENT HISTORY ----------------
+    return figure
+
+
+# --------------------------------------------------
+# INITIALIZE SAVED ALERTS
+# --------------------------------------------------
 
 all_events = load_alerts()
 
+if not all_events:
+    initial_events = generate_simulated_events(12)
+    append_alerts(initial_events)
+    all_events = load_alerts()
 
-# ---------------- FILTER EVENTS ----------------
+
+# --------------------------------------------------
+# SIDEBAR
+# --------------------------------------------------
+
+st.sidebar.title("🛡️ AetherHound")
+
+st.sidebar.caption(
+    "Air-Gapped RF & Acoustic Covert Channel Detector"
+)
+
+st.sidebar.divider()
+
+signal_mode = st.sidebar.selectbox(
+    "Filter by Signal Type",
+    ["Both", "RF", "Acoustic"],
+)
+
+severity_mode = st.sidebar.selectbox(
+    "Filter by Severity",
+    ["All", "NORMAL", "WARNING", "CRITICAL"],
+)
+
+st.sidebar.divider()
+
+if st.sidebar.button(
+    "Generate New Simulation",
+    use_container_width=True,
+):
+    new_events = generate_simulated_events(12)
+    append_alerts(new_events)
+
+    st.rerun()
+
+st.sidebar.caption(
+    "Demo mode: all generated events are synthetic."
+)
+
+
+# --------------------------------------------------
+# FILTER ALERTS
+# --------------------------------------------------
 
 if signal_mode == "Both":
-
     visible_events = all_events
-
 else:
-
     visible_events = [
-        event for event in all_events
-        if event["signal_type"] == signal_mode
+        event
+        for event in all_events
+        if event.get("signal_type") == signal_mode
     ]
 
 
-# ---------------- SYSTEM OVERVIEW ----------------
+if severity_mode == "All":
+    display_events = visible_events
+else:
+    display_events = [
+        event
+        for event in visible_events
+        if event.get("status") == severity_mode
+    ]
 
-summary = generate_alert_summary(
-    visible_events
+
+# --------------------------------------------------
+# MAIN HEADER
+# --------------------------------------------------
+
+st.title("🛡️ AetherHound Monitoring Dashboard")
+
+st.markdown(
+    """
+    <div class="status-note">
+    Monitoring simulated RF and acoustic signals for
+    demonstration of anomaly detection and alert management.
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
-st.header("System Overview")
+st.write("")
 
-col1, col2, col3, col4 = st.columns(4)
 
-col1.metric(
-    "Total Events",
-    summary["total"]
+# --------------------------------------------------
+# SUMMARY METRICS
+# --------------------------------------------------
+
+summary = generate_alert_summary(display_events)
+
+metric1, metric2, metric3, metric4 = st.columns(4)
+
+metric1.metric(
+    "Total Alerts",
+    summary["total"],
 )
 
-col2.metric(
-    "Normal",
-    summary["normal"]
-)
-
-col3.metric(
-    "Warnings",
-    summary["warning"]
-)
-
-col4.metric(
+metric2.metric(
     "Critical",
-    summary["critical"]
+    summary["critical"],
 )
 
-st.divider()
+metric3.metric(
+    "Warning",
+    summary["warning"],
+)
+
+metric4.metric(
+    "Normal",
+    summary["normal"],
+)
 
 
-# ---------------- SIGNAL MONITORING ----------------
+# --------------------------------------------------
+# SIGNAL VISUALIZATION
+# --------------------------------------------------
 
-st.header("Signal Monitoring")
+st.subheader("Signal Visualization")
 
-chart_col1, chart_col2 = st.columns(2)
+if signal_mode == "Both":
+    chart1, chart2 = st.columns(2)
 
-
-# RF monitoring
-
-if signal_mode in ["Both", "RF"]:
-
-    with chart_col1:
-
-        st.subheader("📡 RF Signal Monitor")
-
-        rf_event = next(
-            (
-                event for event in reversed(visible_events)
-                if event["signal_type"] == "RF"
-            ),
-            None
-        )
-
-        rf_anomaly = (
-            rf_event is not None
-            and rf_event["status"] != "NORMAL"
-        )
-
-        time_values, signal_values = generate_signal(
-            "RF",
-            anomaly=rf_anomaly
-        )
-
-        rf_chart = create_signal_chart(
-            time_values,
-            signal_values,
-            "Simulated RF Waveform"
-        )
-
+    with chart1:
         st.plotly_chart(
-            rf_chart,
-            use_container_width=True
+            create_signal_chart("RF"),
+            use_container_width=True,
         )
 
-
-# Acoustic monitoring
-
-if signal_mode in ["Both", "Acoustic"]:
-
-    with chart_col2:
-
-        st.subheader("🔊 Acoustic Signal Monitor")
-
-        audio_event = next(
-            (
-                event for event in reversed(visible_events)
-                if event["signal_type"] == "Acoustic"
-            ),
-            None
-        )
-
-        audio_anomaly = (
-            audio_event is not None
-            and audio_event["status"] != "NORMAL"
-        )
-
-        time_values, signal_values = generate_signal(
-            "Acoustic",
-            anomaly=audio_anomaly
-        )
-
-        audio_chart = create_signal_chart(
-            time_values,
-            signal_values,
-            "Simulated Acoustic Waveform"
-        )
-
+    with chart2:
         st.plotly_chart(
-            audio_chart,
-            use_container_width=True
+            create_signal_chart("Acoustic"),
+            use_container_width=True,
         )
 
-
-st.divider()
-
-
-# ---------------- ANOMALY DETECTION RESULTS ----------------
-
-st.header("Anomaly Detection Results")
-
-if visible_events:
-
-    dataframe = pd.DataFrame(
-        visible_events
+elif signal_mode == "RF":
+    st.plotly_chart(
+        create_signal_chart("RF"),
+        use_container_width=True,
     )
 
-    dataframe = dataframe.rename(
-        columns={
-            "timestamp": "Timestamp",
-            "signal_type": "Signal Type",
-            "anomaly_score": "Anomaly Score",
-            "status": "Status"
-        }
+else:
+    st.plotly_chart(
+        create_signal_chart("Acoustic"),
+        use_container_width=True,
     )
+
+
+# --------------------------------------------------
+# ALERT TABLE
+# --------------------------------------------------
+
+st.subheader("Anomaly Detection Results")
+
+if display_events:
+    dataframe = pd.DataFrame(display_events)
+
+    required_columns = [
+        "timestamp",
+        "signal_type",
+        "score",
+        "status",
+    ]
+
+    available_columns = [
+        column
+        for column in required_columns
+        if column in dataframe.columns
+    ]
+
+    dataframe = dataframe[available_columns]
 
     st.dataframe(
         dataframe,
         use_container_width=True,
-        hide_index=True
+        hide_index=True,
     )
 
 else:
-
-    st.info(
-        "No events available for this signal type."
-    )
+    st.info("No alerts match the selected filters.")
 
 
-st.divider()
+# --------------------------------------------------
+# ALERT HISTORY
+# --------------------------------------------------
 
-
-# ---------------- PERSISTENT ALERT HISTORY ----------------
-
-st.header("🚨 Persistent Alert History")
-
-st.caption(
-    "These alerts are loaded from the project's "
-    "logs/alerts.json file."
-)
+st.subheader("Alert History")
 
 abnormal_events = [
-    event for event in visible_events
-    if event["status"] in ["WARNING", "CRITICAL"]
+    event
+    for event in display_events
+    if event.get("status") in ["WARNING", "CRITICAL"]
 ]
 
 if abnormal_events:
+    latest_alerts = abnormal_events[-20:][::-1]
 
-    # Display the most recent 20 abnormal alerts
-    recent_alerts = abnormal_events[-20:]
+    history_dataframe = pd.DataFrame(latest_alerts)
 
-    for event in reversed(recent_alerts):
-
-        status = event["status"]
-
-        if status == "CRITICAL":
-
-            st.error(
-                f"🔴 CRITICAL | {event['signal_type']} | "
-                f"Score: {event['anomaly_score']} | "
-                f"{event['timestamp']}"
-            )
-
-        else:
-
-            st.warning(
-                f"🟠 WARNING | {event['signal_type']} | "
-                f"Score: {event['anomaly_score']} | "
-                f"{event['timestamp']}"
-            )
+    st.dataframe(
+        history_dataframe,
+        use_container_width=True,
+        hide_index=True,
+    )
 
 else:
-
     st.success(
-        "No warning or critical events in saved history."
+        "No warning or critical alerts match the current filters."
     )
 
 
-# ---------------- DOWNLOAD ALERT LOG ----------------
+# --------------------------------------------------
+# DOWNLOAD ALERTS
+# --------------------------------------------------
 
-st.subheader("Export Alert History")
+st.subheader("Export Alert Data")
 
-alert_json = json.dumps(
-    all_events,
-    indent=4
-)
+download_col1, download_col2 = st.columns(2)
 
-st.download_button(
-    label="Download Alert History (JSON)",
-    data=alert_json,
-    file_name="aetherhound_alert_history.json",
-    mime="application/json",
-    use_container_width=True
-)
+with download_col1:
+    json_data = json.dumps(
+        display_events,
+        indent=4,
+    )
+
+    st.download_button(
+        label="Download Filtered Alerts (JSON)",
+        data=json_data,
+        file_name="aetherhound_filtered_alerts.json",
+        mime="application/json",
+        use_container_width=True,
+    )
+
+with download_col2:
+    if display_events:
+        csv_dataframe = pd.DataFrame(display_events)
+
+        csv_data = csv_dataframe.to_csv(
+            index=False,
+        ).encode("utf-8")
+
+        st.download_button(
+            label="Download Filtered Alerts (CSV)",
+            data=csv_data,
+            file_name="aetherhound_filtered_alerts.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
+
+    else:
+        st.button(
+            "Download Filtered Alerts (CSV)",
+            disabled=True,
+            use_container_width=True,
+        )
 
 
-# ---------------- FOOTER ----------------
+# --------------------------------------------------
+# FOOTER
+# --------------------------------------------------
 
 st.divider()
 
 st.caption(
-    "AetherHound | Development Prototype | "
-    "All current signals and anomaly scores are simulated. "
-    "No real-world covert-channel detection is claimed."
+    "AetherHound | Internship Prototype | "
+    "Synthetic data is used for demonstration. "
+    "This dashboard does not represent real RF or acoustic detection."
 )
