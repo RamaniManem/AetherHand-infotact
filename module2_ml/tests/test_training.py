@@ -4,31 +4,38 @@ import torch
 from models.autoencoder import Autoencoder
 from training.train_autoencoder import train_autoencoder
 
-# Create the Autoencoder
-model = Autoencoder(input_size=100)
+# Generate temporary normal training samples
+torch.manual_seed(42)
 
-# Generate temporary sample data
-# 200 samples, each containing 100 features
-train_data = torch.randn(200, 100)
+train_data = torch.randn(160, 100)
+validation_data = torch.randn(40, 100)
+
+# Create Autoencoder
+model = Autoencoder(input_size=100)
 
 print("Starting Autoencoder training...")
 
-# Train the model
+# Train with validation and early stopping
 trained_model, history = train_autoencoder(
     model,
     train_data,
-    epochs=20,
-    batch_size=32
+    validation_data=validation_data,
+    epochs=50,
+    batch_size=32,
+    patience=5
 )
 
-print("\nTraining completed!")
-print("Initial loss:", history[0])
-print("Final loss:", history[-1])
+print("\n===== TRAINING SUMMARY =====")
 
-# Save the trained model
+print("Training epochs completed:", len(history["train_loss"]))
+print("Final training loss:", history["train_loss"][-1])
+print("Best validation loss:", min(history["validation_loss"]))
+
+# Save model weights
 torch.save(
     trained_model.state_dict(),
     "saved_models/autoencoder.pth"
 )
 
-print("Model saved successfully!")
+print("\nModel saved successfully!")
+print("Training test completed!")
