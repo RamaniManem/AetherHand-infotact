@@ -1,9 +1,12 @@
 
+import json
+import os
+
 import numpy as np
 import torch
 
-from datasets.synthetic_data import generate_synthetic_data
 from models.autoencoder import Autoencoder
+from datasets.synthetic_data import generate_synthetic_data
 from preprocessing.preprocess import SignalPreprocessor
 from training.train_autoencoder import train_autoencoder
 from detection.anomaly_score import calculate_anomaly_score
@@ -11,10 +14,8 @@ from detection.detector import calculate_threshold, classify_anomaly
 from evaluation.evaluate_model import evaluate_model
 
 
-torch.manual_seed(42)
-
-# Generate synthetic RF dataset
-data, labels = generate_synthetic_data(
+# 1. Generate training and validation data
+train_val_data, train_val_labels = generate_synthetic_data(
     samples=1000,
     features=100,
     anomaly_ratio=0.2,
@@ -22,106 +23,129 @@ data, labels = generate_synthetic_data(
     random_state=42
 )
 
-# Separate normal samples
-normal_data = data[labels == 0]
+# Use only normal samples for training and validation
+normal_data = train_val_data[train_val_labels == 0]
 
-# Split normal data into training and validation
 train_data = normal_data[:640]
 validation_data = normal_data[640:]
 
-# Fit preprocessing using training data only
+# 2. Generate independent test data
+test_data, test_labels = generate_synthetic_data(
+    samples=1000,
+    features=100,
+    anomaly_ratio=0.2,
+    signal_type="rf",
+    random_state=43
+)
+
+# 3. Preprocess the datasets
 preprocessor = SignalPreprocessor()
 
-train_tensor = preprocessor.fit_transform(train_data)
-validation_tensor = preprocessor.transform(validation_data)
+train_processed = preprocessor.fit_transform(train_data)
+validation_processed = preprocessor.transform(validation_data)
+test_processed = preprocessor.transform(test_data)
 
-# Create Autoencoder
+# 4. Train Autoencoder
 model = Autoencoder(input_size=100)
 
-print("\n===== TRAINING AUTOENCODER =====")
+print("\n===== TRAINING RF AUTOENCODER =====")
 
 model, history = train_autoencoder(
     model,
-    train_tensor,
-    validation_data=validation_tensor,
+    train_processed,
+    validation_data=validation_processed,
     epochs=50,
     batch_size=32,
     patience=5
 )
 
-# Calculate threshold from normal validation scores
+# 5. Calculate validation reconstruction errors
 model.eval()
 
 with torch.no_grad():
-    validation_reconstructed = model(validation_tensor)
+    validation_reconstructed = model(validation_processed)
 
     validation_scores = calculate_anomaly_score(
-        validation_tensor,
+        validation_processed,
         validation_reconstructed
-    ).numpy()
+    )
 
-threshold = calculate_threshold(
-    validation_scores,
-    percentile=95
-)
-
-print("\nDetection Threshold:", threshold)
-
-# Prepare all test samples
-test_data = data[labels == 0]
-test_anomalies = data[labels == 1]
-
-test_samples = np.vstack((test_data, test_anomalies))
-actual_labels = np.concatenate((
-    np.zeros(len(test_data), dtype=int),
-    np.ones(len(test_anomalies), dtype=int)
-))
-
-processed_test = preprocessor.transform(test_samples)
-
-# Generate predictions
+# 6. Calculate test reconstruction errors
 with torch.no_grad():
-    reconstructed = model(processed_test)
+    test_reconstructed = model(test_processed)
 
     test_scores = calculate_anomaly_score(
-        processed_test,
-        reconstructed
-    ).numpy()
+        test_processed,
+        test_reconstructed
+    )
 
-predictions = classify_anomaly(
-    test_scores,
-    threshold
+validation_scores = validation_scores.cpu().numpy()
+test_scores = test_scores.cpu().numpy()
+
+# 7. Test different threshold percentiles
+percentiles = [90, 95, 97, 99]
+
+optimization_results = {}
+
+print("\n===== RF THRESHOLD OPTIMIZATION =====")
+
+for percentile in percentiles:
+
+    threshold = calculate_threshold(
+        validation_scores,
+        percentile=percentile
+    )
+
+    predictions = classify_anomaly(
+        test_scores,
+        threshold
+    )
+
+    predicted_labels = np.array([
+        1 if prediction == "Anomalous" else 0
+        for prediction in predictions
+    ])
+
+    results = evaluate_model(
+        test_labels,
+        predicted_labels
+    )
+
+    optimization_results[str(percentile)] = {
+        "threshold": threshold,
+        "accuracy": results["accuracy"],
+        "precision": results["precision"],
+        "recall": results["recall"],
+        "f1_score": results["f1_score"],
+        "false_positive_rate": results["false_positive_rate"],
+        "false_negative_rate": results["false_negative_rate"],
+        "confusion_matrix": np.asarray(
+            results["confusion_matrix"]
+        ).tolist()
+    }
+
+    print(f"\nThreshold Percentile: {percentile}")
+    print("Threshold Value:", threshold)
+    print("Accuracy:", results["accuracy"])
+    print("Precision:", results["precision"])
+    print("Recall:", results["recall"])
+    print("F1 Score:", results["f1_score"])
+    print("False Positive Rate:", results["false_positive_rate"])
+    print("False Negative Rate:", results["false_negative_rate"])
+    print("Confusion Matrix:")
+    print(results["confusion_matrix"])
+
+# 8. Save all optimization results
+results_path = os.path.join(
+    os.path.dirname(__file__),
+    "..",
+    "evaluation",
+    "rf_threshold_results.json"
 )
 
-predicted_labels = np.array([
-    1 if result == "Anomalous" else 0
-    for result in predictions
-])
+os.makedirs(os.path.dirname(results_path), exist_ok=True)
 
-# Evaluate detection
-results = evaluate_model(
-    actual_labels,
-    predicted_labels
-)
+with open(results_path, "w") as file:
+    json.dump(optimization_results, file, indent=4)
 
-print("\n===== SYNTHETIC RF DETECTION RESULTS =====")
-print("Accuracy:", round(results["accuracy"], 4))
-print("Precision:", round(results["precision"], 4))
-print("Recall:", round(results["recall"], 4))
-print("F1 Score:", round(results["f1_score"], 4))
-
-print("\nConfusion Matrix:")
-
-print(results["confusion_matrix"])
-
-print(
-    "False Positive Rate:",
-    round(results["false_positive_rate"], 4)
-)
-
-print(
-    "False Negative Rate:",
-    round(results["false_negative_rate"], 4)
-)
-
-print("\nSynthetic RF detection test completed!")
+print("\nAll RF threshold results saved successfully!")

@@ -229,3 +229,43 @@ module2_ml/venv/
 
 # Saved model files
 module2_ml/saved_models/
+
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+env/
+module2_ml/venv/
+
+# PyTorch trained model files
+*.pth
+*.pt
+*.ckpt
+
+# Generated model storage
+module2_ml/saved_models/
+
+# Python and ML experiment outputs
+*.log
+*.tmp
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example

@@ -1,0 +1,78 @@
+{
+    "90": {
+        "threshold": 1.0717707872390747,
+        "accuracy": 0.923,
+        "precision": 0.7220216606498195,
+        "recall": 1.0,
+        "f1_score": 0.8385744234800838,
+        "false_positive_rate": 0.09625,
+        "false_negative_rate": 0.0,
+        "confusion_matrix": [
+            [
+                723,
+                77
+            ],
+            [
+                0,
+                200
+            ]
+        ]
+    },
+    "95": {
+        "threshold": 1.1146736145019531,
+        "accuracy": 0.955,
+        "precision": 0.8163265306122449,
+        "recall": 1.0,
+        "f1_score": 0.898876404494382,
+        "false_positive_rate": 0.05625,
+        "false_negative_rate": 0.0,
+        "confusion_matrix": [
+            [
+                755,
+                45
+            ],
+            [
+                0,
+                200
+            ]
+        ]
+    },
+    "97": {
+        "threshold": 1.1926625967025757,
+        "accuracy": 0.989,
+        "precision": 0.9478672985781991,
+        "recall": 1.0,
+        "f1_score": 0.9732360097323601,
+        "false_positive_rate": 0.01375,
+        "false_negative_rate": 0.0,
+        "confusion_matrix": [
+            [
+                789,
+                11
+            ],
+            [
+                0,
+                200
+            ]
+        ]
+    },
+    "99": {
+        "threshold": 1.2498048543930054,
+        "accuracy": 0.996,
+        "precision": 0.9803921568627451,
+        "recall": 1.0,
+        "f1_score": 0.9900990099009901,
+        "false_positive_rate": 0.005,
+        "false_negative_rate": 0.0,
+        "confusion_matrix": [
+            [
+                796,
+                4
+            ],
+            [
+                0,
+                200
+            ]
+        ]
+    }
+}
