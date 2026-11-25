@@ -7,16 +7,20 @@ def generate_synthetic_data(
     features=100,
     anomaly_ratio=0.2,
     signal_type="rf",
-    random_state=42
+    random_state=42,
+    anomaly_strength=4.0,
+    noise_level=1.0
 ):
     """
-    Generate simulated RF or acoustic feature data.
+    Generate synthetic RF or acoustic feature data.
 
     Labels:
         0 = Normal
         1 = Anomalous
 
-    This is synthetic test data, not real signal recordings.
+    anomaly_strength controls anomaly intensity.
+    noise_level controls the standard deviation of
+    the generated background noise.
     """
 
     if samples <= 0 or features <= 0:
@@ -28,58 +32,49 @@ def generate_synthetic_data(
     if signal_type not in ("rf", "acoustic"):
         raise ValueError("Signal type must be 'rf' or 'acoustic'")
 
+    if anomaly_strength < 0:
+        raise ValueError("Anomaly strength cannot be negative")
+
+    if noise_level <= 0:
+        raise ValueError("Noise level must be positive")
+
     rng = np.random.default_rng(random_state)
 
     anomaly_count = int(samples * anomaly_ratio)
     normal_count = samples - anomaly_count
 
-    # Generate normal feature patterns
+    # Generate normal background features
+    normal_data = rng.normal(
+        0.0,
+        noise_level,
+        (normal_count, features)
+    )
+
+    # Generate anomalous features
+    anomalous_data = rng.normal(
+        0.0,
+        noise_level,
+        (anomaly_count, features)
+    )
+
     if signal_type == "rf":
-        normal_data = rng.normal(
-            loc=0.0,
-            scale=1.0,
-            size=(normal_count, features)
-        )
-
-        # Simulate unusual frequency-band activity
-        anomalous_data = rng.normal(
-            loc=0.0,
-            scale=1.0,
-            size=(anomaly_count, features)
-        )
-
-        anomalous_data[:, :features // 4] += 4.0
+        anomalous_data[:, :features // 4] += anomaly_strength
 
     else:
-        normal_data = rng.normal(
-            loc=0.0,
-            scale=1.0,
-            size=(normal_count, features)
-        )
+        anomalous_data[:, features // 2:] *= anomaly_strength
 
-        # Simulate unusual acoustic feature patterns
-        anomalous_data = rng.normal(
-            loc=0.0,
-            scale=1.0,
-            size=(anomaly_count, features)
-        )
-
-        anomalous_data[:, features // 2:] *= 3.0
-
-    # Combine samples
+    # Combine data and labels
     data = np.vstack((normal_data, anomalous_data))
 
-    # Assign labels
     labels = np.concatenate((
         np.zeros(normal_count, dtype=int),
         np.ones(anomaly_count, dtype=int)
     ))
 
-    # Shuffle dataset
+    # Shuffle samples
     indices = rng.permutation(samples)
 
     data = data[indices]
     labels = labels[indices]
 
     return data.astype(np.float32), labels
-
