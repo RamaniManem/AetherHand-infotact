@@ -1,0 +1,217 @@
+{
+    "experiment": "Three-Level vs Four-Level Noise Calibration",
+    "test_noise_levels": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+    ],
+    "anomaly_strength": 2.0,
+    "threshold_percentile": 99,
+    "model_a": {
+        "calibration_levels": [
+            0.5,
+            1.0,
+            1.5
+        ],
+        "thresholds": {
+            "0.5": 0.2783515155315399,
+            "1.0": 1.05099356174469,
+            "1.5": 2.3645355701446533
+        },
+        "results": {
+            "0.5": {
+                "actual_noise": 0.5,
+                "estimated_noise": 0.5084427141892023,
+                "selected_noise": 0.5,
+                "threshold": 0.2783515155315399,
+                "accuracy": 0.988,
+                "precision": 0.9433962264150944,
+                "recall": 1.0,
+                "f1_score": 0.970873786407767,
+                "false_positive_rate": 0.015,
+                "false_negative_rate": 0.0,
+                "confusion_matrix": [
+                    [
+                        788,
+                        12
+                    ],
+                    [
+                        0,
+                        200
+                    ]
+                ]
+            },
+            "1.0": {
+                "actual_noise": 1.0,
+                "estimated_noise": 1.0168854283784046,
+                "selected_noise": 1.0,
+                "threshold": 1.05099356174469,
+                "accuracy": 0.978,
+                "precision": 0.9009009009009009,
+                "recall": 1.0,
+                "f1_score": 0.9478672985781991,
+                "false_positive_rate": 0.0275,
+                "false_negative_rate": 0.0,
+                "confusion_matrix": [
+                    [
+                        778,
+                        22
+                    ],
+                    [
+                        0,
+                        200
+                    ]
+                ]
+            },
+            "1.5": {
+                "actual_noise": 1.5,
+                "estimated_noise": 1.5253281757063486,
+                "selected_noise": 1.5,
+                "threshold": 2.3645355701446533,
+                "accuracy": 0.904,
+                "precision": 0.8561643835616438,
+                "recall": 0.625,
+                "f1_score": 0.7225433526011561,
+                "false_positive_rate": 0.02625,
+                "false_negative_rate": 0.375,
+                "confusion_matrix": [
+                    [
+                        779,
+                        21
+                    ],
+                    [
+                        75,
+                        125
+                    ]
+                ]
+            },
+            "2.0": {
+                "actual_noise": 2.0,
+                "estimated_noise": 2.023732203927474,
+                "selected_noise": 1.5,
+                "threshold": 2.3645355701446533,
+                "accuracy": 0.22,
+                "precision": 0.20408163265306123,
+                "recall": 1.0,
+                "f1_score": 0.3389830508474576,
+                "false_positive_rate": 0.975,
+                "false_negative_rate": 0.0,
+                "confusion_matrix": [
+                    [
+                        20,
+                        780
+                    ],
+                    [
+                        0,
+                        200
+                    ]
+                ]
+            }
+        }
+    },
+    "model_b": {
+        "calibration_levels": [
+            0.5,
+            1.0,
+            1.5,
+            2.0
+        ],
+        "thresholds": {
+            "0.5": 0.15016184747219086,
+            "1.0": 0.6761123538017273,
+            "1.5": 1.4843857288360596,
+            "2.0": 2.41988468170166
+        },
+        "results": {
+            "0.5": {
+                "actual_noise": 0.5,
+                "estimated_noise": 0.5084427141892023,
+                "selected_noise": 0.5,
+                "threshold": 0.15016184747219086,
+                "accuracy": 0.93,
+                "precision": 0.7407407407407407,
+                "recall": 1.0,
+                "f1_score": 0.851063829787234,
+                "false_positive_rate": 0.0875,
+                "false_negative_rate": 0.0,
+                "confusion_matrix": [
+                    [
+                        730,
+                        70
+                    ],
+                    [
+                        0,
+                        200
+                    ]
+                ]
+            },
+            "1.0": {
+                "actual_noise": 1.0,
+                "estimated_noise": 1.0168854283784046,
+                "selected_noise": 1.0,
+                "threshold": 0.6761123538017273,
+                "accuracy": 0.995,
+                "precision": 0.975609756097561,
+                "recall": 1.0,
+                "f1_score": 0.9876543209876543,
+                "false_positive_rate": 0.00625,
+                "false_negative_rate": 0.0,
+                "confusion_matrix": [
+                    [
+                        795,
+                        5
+                    ],
+                    [
+                        0,
+                        200
+                    ]
+                ]
+            },
+            "1.5": {
+                "actual_noise": 1.5,
+                "estimated_noise": 1.5253281757063486,
+                "selected_noise": 1.5,
+                "threshold": 1.4843857288360596,
+                "accuracy": 0.915,
+                "precision": 0.9197080291970803,
+                "recall": 0.63,
+                "f1_score": 0.7477744807121661,
+                "false_positive_rate": 0.01375,
+                "false_negative_rate": 0.37,
+                "confusion_matrix": [
+                    [
+                        789,
+                        11
+                    ],
+                    [
+                        74,
+                        126
+                    ]
+                ]
+            },
+            "2.0": {
+                "actual_noise": 2.0,
+                "estimated_noise": 2.023732203927474,
+                "selected_noise": 2.0,
+                "threshold": 2.41988468170166,
+                "accuracy": 0.842,
+                "precision": 0.6329113924050633,
+                "recall": 0.5,
+                "f1_score": 0.5586592178770949,
+                "false_positive_rate": 0.0725,
+                "false_negative_rate": 0.5,
+                "confusion_matrix": [
+                    [
+                        742,
+                        58
+                    ],
+                    [
+                        100,
+                        100
+                    ]
+                ]
+            }
+        }
+    }
+}
