@@ -1,0 +1,567 @@
+{
+    "experiment": "Autoencoder Architecture Comparison",
+    "noise_levels": [
+        1.0,
+        2.0
+    ],
+    "anomaly_strengths": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+    ],
+    "threshold_percentile": 99,
+    "architectures": {
+        "Baseline": "100-64-32-16-32-64-100",
+        "Deep": "100-64-48-32-16-32-48-64-100",
+        "Compact": "100-64-32-8-32-64-100"
+    },
+    "results": {
+        "Baseline": {
+            "thresholds": {
+                "0.5": 0.15016184747219086,
+                "1.0": 0.6761123538017273,
+                "1.5": 1.4843857288360596,
+                "2.0": 2.41988468170166
+            },
+            "results": {
+                "1.0": {
+                    "0.5": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 0.5,
+                        "threshold": 0.6761123538017273,
+                        "accuracy": 0.802,
+                        "precision": 0.5833333333333334,
+                        "recall": 0.035,
+                        "f1_score": 0.0660377358490566,
+                        "false_positive_rate": 0.00625,
+                        "false_negative_rate": 0.965,
+                        "confusion_matrix": [
+                            [
+                                795,
+                                5
+                            ],
+                            [
+                                193,
+                                7
+                            ]
+                        ]
+                    },
+                    "1.0": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 1.0,
+                        "threshold": 0.6761123538017273,
+                        "accuracy": 0.848,
+                        "precision": 0.9137931034482759,
+                        "recall": 0.265,
+                        "f1_score": 0.4108527131782946,
+                        "false_positive_rate": 0.00625,
+                        "false_negative_rate": 0.735,
+                        "confusion_matrix": [
+                            [
+                                795,
+                                5
+                            ],
+                            [
+                                147,
+                                53
+                            ]
+                        ]
+                    },
+                    "1.5": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 1.5,
+                        "threshold": 0.6761123538017273,
+                        "accuracy": 0.946,
+                        "precision": 0.967948717948718,
+                        "recall": 0.755,
+                        "f1_score": 0.848314606741573,
+                        "false_positive_rate": 0.00625,
+                        "false_negative_rate": 0.245,
+                        "confusion_matrix": [
+                            [
+                                795,
+                                5
+                            ],
+                            [
+                                49,
+                                151
+                            ]
+                        ]
+                    },
+                    "2.0": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 2.0,
+                        "threshold": 0.6761123538017273,
+                        "accuracy": 0.995,
+                        "precision": 0.975609756097561,
+                        "recall": 1.0,
+                        "f1_score": 0.9876543209876543,
+                        "false_positive_rate": 0.00625,
+                        "false_negative_rate": 0.0,
+                        "confusion_matrix": [
+                            [
+                                795,
+                                5
+                            ],
+                            [
+                                0,
+                                200
+                            ]
+                        ]
+                    }
+                },
+                "2.0": {
+                    "0.5": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 0.5,
+                        "threshold": 2.41988468170166,
+                        "accuracy": 0.762,
+                        "precision": 0.2564102564102564,
+                        "recall": 0.1,
+                        "f1_score": 0.14388489208633093,
+                        "false_positive_rate": 0.0725,
+                        "false_negative_rate": 0.9,
+                        "confusion_matrix": [
+                            [
+                                742,
+                                58
+                            ],
+                            [
+                                180,
+                                20
+                            ]
+                        ]
+                    },
+                    "1.0": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 1.0,
+                        "threshold": 2.41988468170166,
+                        "accuracy": 0.779,
+                        "precision": 0.3894736842105263,
+                        "recall": 0.185,
+                        "f1_score": 0.25084745762711863,
+                        "false_positive_rate": 0.0725,
+                        "false_negative_rate": 0.815,
+                        "confusion_matrix": [
+                            [
+                                742,
+                                58
+                            ],
+                            [
+                                163,
+                                37
+                            ]
+                        ]
+                    },
+                    "1.5": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 1.5,
+                        "threshold": 2.41988468170166,
+                        "accuracy": 0.809,
+                        "precision": 0.536,
+                        "recall": 0.335,
+                        "f1_score": 0.4123076923076923,
+                        "false_positive_rate": 0.0725,
+                        "false_negative_rate": 0.665,
+                        "confusion_matrix": [
+                            [
+                                742,
+                                58
+                            ],
+                            [
+                                133,
+                                67
+                            ]
+                        ]
+                    },
+                    "2.0": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 2.0,
+                        "threshold": 2.41988468170166,
+                        "accuracy": 0.842,
+                        "precision": 0.6329113924050633,
+                        "recall": 0.5,
+                        "f1_score": 0.5586592178770949,
+                        "false_positive_rate": 0.0725,
+                        "false_negative_rate": 0.5,
+                        "confusion_matrix": [
+                            [
+                                742,
+                                58
+                            ],
+                            [
+                                100,
+                                100
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "Deep": {
+            "thresholds": {
+                "0.5": 0.15520615875720978,
+                "1.0": 0.6949642896652222,
+                "1.5": 1.5203033685684204,
+                "2.0": 2.505751132965088
+            },
+            "results": {
+                "1.0": {
+                    "0.5": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 0.5,
+                        "threshold": 0.6949642896652222,
+                        "accuracy": 0.802,
+                        "precision": 0.5714285714285714,
+                        "recall": 0.04,
+                        "f1_score": 0.07476635514018691,
+                        "false_positive_rate": 0.0075,
+                        "false_negative_rate": 0.96,
+                        "confusion_matrix": [
+                            [
+                                794,
+                                6
+                            ],
+                            [
+                                192,
+                                8
+                            ]
+                        ]
+                    },
+                    "1.0": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 1.0,
+                        "threshold": 0.6949642896652222,
+                        "accuracy": 0.851,
+                        "precision": 0.9047619047619048,
+                        "recall": 0.285,
+                        "f1_score": 0.43346007604562736,
+                        "false_positive_rate": 0.0075,
+                        "false_negative_rate": 0.715,
+                        "confusion_matrix": [
+                            [
+                                794,
+                                6
+                            ],
+                            [
+                                143,
+                                57
+                            ]
+                        ]
+                    },
+                    "1.5": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 1.5,
+                        "threshold": 0.6949642896652222,
+                        "accuracy": 0.954,
+                        "precision": 0.963855421686747,
+                        "recall": 0.8,
+                        "f1_score": 0.8743169398907104,
+                        "false_positive_rate": 0.0075,
+                        "false_negative_rate": 0.2,
+                        "confusion_matrix": [
+                            [
+                                794,
+                                6
+                            ],
+                            [
+                                40,
+                                160
+                            ]
+                        ]
+                    },
+                    "2.0": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 2.0,
+                        "threshold": 0.6949642896652222,
+                        "accuracy": 0.994,
+                        "precision": 0.970873786407767,
+                        "recall": 1.0,
+                        "f1_score": 0.9852216748768473,
+                        "false_positive_rate": 0.0075,
+                        "false_negative_rate": 0.0,
+                        "confusion_matrix": [
+                            [
+                                794,
+                                6
+                            ],
+                            [
+                                0,
+                                200
+                            ]
+                        ]
+                    }
+                },
+                "2.0": {
+                    "0.5": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 0.5,
+                        "threshold": 2.505751132965088,
+                        "accuracy": 0.758,
+                        "precision": 0.23076923076923078,
+                        "recall": 0.09,
+                        "f1_score": 0.12949640287769784,
+                        "false_positive_rate": 0.075,
+                        "false_negative_rate": 0.91,
+                        "confusion_matrix": [
+                            [
+                                740,
+                                60
+                            ],
+                            [
+                                182,
+                                18
+                            ]
+                        ]
+                    },
+                    "1.0": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 1.0,
+                        "threshold": 2.505751132965088,
+                        "accuracy": 0.775,
+                        "precision": 0.3684210526315789,
+                        "recall": 0.175,
+                        "f1_score": 0.23728813559322035,
+                        "false_positive_rate": 0.075,
+                        "false_negative_rate": 0.825,
+                        "confusion_matrix": [
+                            [
+                                740,
+                                60
+                            ],
+                            [
+                                165,
+                                35
+                            ]
+                        ]
+                    },
+                    "1.5": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 1.5,
+                        "threshold": 2.505751132965088,
+                        "accuracy": 0.802,
+                        "precision": 0.5081967213114754,
+                        "recall": 0.31,
+                        "f1_score": 0.38509316770186336,
+                        "false_positive_rate": 0.075,
+                        "false_negative_rate": 0.69,
+                        "confusion_matrix": [
+                            [
+                                740,
+                                60
+                            ],
+                            [
+                                138,
+                                62
+                            ]
+                        ]
+                    },
+                    "2.0": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 2.0,
+                        "threshold": 2.505751132965088,
+                        "accuracy": 0.852,
+                        "precision": 0.6511627906976745,
+                        "recall": 0.56,
+                        "f1_score": 0.6021505376344086,
+                        "false_positive_rate": 0.075,
+                        "false_negative_rate": 0.44,
+                        "confusion_matrix": [
+                            [
+                                740,
+                                60
+                            ],
+                            [
+                                88,
+                                112
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "Compact": {
+            "thresholds": {
+                "0.5": 0.1528574526309967,
+                "1.0": 0.6692735552787781,
+                "1.5": 1.6021331548690796,
+                "2.0": 2.554457664489746
+            },
+            "results": {
+                "1.0": {
+                    "0.5": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 0.5,
+                        "threshold": 0.6692735552787781,
+                        "accuracy": 0.801,
+                        "precision": 0.5161290322580645,
+                        "recall": 0.08,
+                        "f1_score": 0.13852813852813853,
+                        "false_positive_rate": 0.01875,
+                        "false_negative_rate": 0.92,
+                        "confusion_matrix": [
+                            [
+                                785,
+                                15
+                            ],
+                            [
+                                184,
+                                16
+                            ]
+                        ]
+                    },
+                    "1.0": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 1.0,
+                        "threshold": 0.6692735552787781,
+                        "accuracy": 0.849,
+                        "precision": 0.810126582278481,
+                        "recall": 0.32,
+                        "f1_score": 0.45878136200716846,
+                        "false_positive_rate": 0.01875,
+                        "false_negative_rate": 0.68,
+                        "confusion_matrix": [
+                            [
+                                785,
+                                15
+                            ],
+                            [
+                                136,
+                                64
+                            ]
+                        ]
+                    },
+                    "1.5": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 1.5,
+                        "threshold": 0.6692735552787781,
+                        "accuracy": 0.948,
+                        "precision": 0.9157303370786517,
+                        "recall": 0.815,
+                        "f1_score": 0.8624338624338624,
+                        "false_positive_rate": 0.01875,
+                        "false_negative_rate": 0.185,
+                        "confusion_matrix": [
+                            [
+                                785,
+                                15
+                            ],
+                            [
+                                37,
+                                163
+                            ]
+                        ]
+                    },
+                    "2.0": {
+                        "noise_level": 1.0,
+                        "anomaly_strength": 2.0,
+                        "threshold": 0.6692735552787781,
+                        "accuracy": 0.985,
+                        "precision": 0.9302325581395349,
+                        "recall": 1.0,
+                        "f1_score": 0.963855421686747,
+                        "false_positive_rate": 0.01875,
+                        "false_negative_rate": 0.0,
+                        "confusion_matrix": [
+                            [
+                                785,
+                                15
+                            ],
+                            [
+                                0,
+                                200
+                            ]
+                        ]
+                    }
+                },
+                "2.0": {
+                    "0.5": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 0.5,
+                        "threshold": 2.554457664489746,
+                        "accuracy": 0.779,
+                        "precision": 0.3018867924528302,
+                        "recall": 0.08,
+                        "f1_score": 0.12648221343873517,
+                        "false_positive_rate": 0.04625,
+                        "false_negative_rate": 0.92,
+                        "confusion_matrix": [
+                            [
+                                763,
+                                37
+                            ],
+                            [
+                                184,
+                                16
+                            ]
+                        ]
+                    },
+                    "1.0": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 1.0,
+                        "threshold": 2.554457664489746,
+                        "accuracy": 0.786,
+                        "precision": 0.38333333333333336,
+                        "recall": 0.115,
+                        "f1_score": 0.17692307692307693,
+                        "false_positive_rate": 0.04625,
+                        "false_negative_rate": 0.885,
+                        "confusion_matrix": [
+                            [
+                                763,
+                                37
+                            ],
+                            [
+                                177,
+                                23
+                            ]
+                        ]
+                    },
+                    "1.5": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 1.5,
+                        "threshold": 2.554457664489746,
+                        "accuracy": 0.81,
+                        "precision": 0.5595238095238095,
+                        "recall": 0.235,
+                        "f1_score": 0.33098591549295775,
+                        "false_positive_rate": 0.04625,
+                        "false_negative_rate": 0.765,
+                        "confusion_matrix": [
+                            [
+                                763,
+                                37
+                            ],
+                            [
+                                153,
+                                47
+                            ]
+                        ]
+                    },
+                    "2.0": {
+                        "noise_level": 2.0,
+                        "anomaly_strength": 2.0,
+                        "threshold": 2.554457664489746,
+                        "accuracy": 0.847,
+                        "precision": 0.6942148760330579,
+                        "recall": 0.42,
+                        "f1_score": 0.5233644859813084,
+                        "false_positive_rate": 0.04625,
+                        "false_negative_rate": 0.58,
+                        "confusion_matrix": [
+                            [
+                                763,
+                                37
+                            ],
+                            [
+                                116,
+                                84
+                            ]
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
